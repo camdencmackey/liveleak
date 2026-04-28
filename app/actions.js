@@ -9,7 +9,7 @@ import { extractYouTubeId } from "@/lib/youtube";
 
 /* ---------- helpers ---------- */
 
-const ADMIN_COOKIE = "admin";
+const ADMIN_COOKIE = "liveleak_admin";
 
 function clean(value, maxLength = 500) {
   return String(value || "").trim().slice(0, maxLength);
@@ -19,10 +19,15 @@ function normalizeTag(value, fallback) {
   return clean(value || fallback, 10).toUpperCase();
 }
 
+function getAdminSessionSecret() {
+  return process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_PASSWORD;
+}
+
 async function requireAdmin() {
   const cookieStore = await cookies();
+  const expected = getAdminSessionSecret();
 
-  if (cookieStore.get(ADMIN_COOKIE)?.value !== process.env.ADMIN_PASSWORD) {
+  if (!expected || cookieStore.get(ADMIN_COOKIE)?.value !== expected) {
     throw new Error("Not authorized");
   }
 }
@@ -54,14 +59,16 @@ async function bumpVideoCounter(videoId, field) {
 
 export async function loginAdmin(formData) {
   const password = clean(formData.get("password"), 200);
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  const sessionSecret = getAdminSessionSecret();
 
-  if (!process.env.ADMIN_PASSWORD || password !== process.env.ADMIN_PASSWORD) {
-    throw new Error("Wrong password");
+  if (!adminPassword || !sessionSecret || password !== adminPassword) {
+    redirect("/admin?error=invalid");
   }
 
   const cookieStore = await cookies();
 
-  cookieStore.set(ADMIN_COOKIE, password, {
+  cookieStore.set(ADMIN_COOKIE, sessionSecret, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
@@ -75,7 +82,14 @@ export async function loginAdmin(formData) {
 
 export async function logoutAdmin() {
   const cookieStore = await cookies();
-  cookieStore.delete(ADMIN_COOKIE);
+
+  cookieStore.set(ADMIN_COOKIE, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 0
+  });
 
   revalidatePath("/admin");
   redirect("/admin");
@@ -172,10 +186,7 @@ export async function deleteVideo(formData) {
 
   const db = supabaseAdmin();
 
-  const { error } = await db
-    .from("videos")
-    .delete()
-    .eq("id", id);
+  const { error } = await db.from("videos").delete().eq("id", id);
 
   if (error) {
     throw new Error(error.message);
@@ -276,10 +287,7 @@ export async function deleteComment(formData) {
 
   const db = supabaseAdmin();
 
-  const { error } = await db
-    .from("comments")
-    .delete()
-    .eq("id", id);
+  const { error } = await db.from("comments").delete().eq("id", id);
 
   if (error) {
     throw new Error(error.message);
@@ -287,7 +295,11 @@ export async function deleteComment(formData) {
 
   revalidatePath("/admin");
   revalidatePath("/");
-  if (videoId) revalidatePath(`/video/${videoId}`);
+
+  if (videoId) {
+    revalidatePath(`/video/${videoId}`);
+  }
+
   redirect("/admin");
 }
 
@@ -369,10 +381,7 @@ export async function deleteForumThread(formData) {
 
   const db = supabaseAdmin();
 
-  const { error } = await db
-    .from("forum_threads")
-    .delete()
-    .eq("id", id);
+  const { error } = await db.from("forum_threads").delete().eq("id", id);
 
   if (error) {
     throw new Error(error.message);
@@ -395,16 +404,17 @@ export async function deleteForumPost(formData) {
 
   const db = supabaseAdmin();
 
-  const { error } = await db
-    .from("forum_posts")
-    .delete()
-    .eq("id", id);
+  const { error } = await db.from("forum_posts").delete().eq("id", id);
 
   if (error) {
     throw new Error(error.message);
   }
 
   revalidatePath("/admin");
-  if (threadId) revalidatePath(`/forum/${threadId}`);
+
+  if (threadId) {
+    revalidatePath(`/forum/${threadId}`);
+  }
+
   redirect("/admin");
 }
