@@ -39,8 +39,16 @@ async function getHomeData(query) {
     { data: posts, error: postError }
   ] = await Promise.all([
     videosQuery,
-    db.from("forum_threads").select("*").order("created_at", { ascending: false }).limit(5),
-    db.from("forum_posts").select("*").order("created_at", { ascending: false }).limit(5)
+    db
+      .from("forum_threads")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(5),
+    db
+      .from("forum_posts")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(5)
   ]);
 
   if (videoError) throw new Error(videoError.message);
@@ -186,10 +194,14 @@ function FeaturedRelease() {
 
               <div className="spotify-wrap">
                 <iframe
-                  src="https://open.spotify.com/embed/track/49fyD99tJX6n8Wh0UOmT07"
+                  data-testid="embed-iframe"
+                  src="https://open.spotify.com/embed/track/49fyD99tJX6n8Wh0UOmT07?utm_source=generator&theme=0"
                   height="152"
                   frameBorder="0"
                   allowFullScreen
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  loading="lazy"
+                  title="Fell in Love With a Terrorist Spotify embed"
                 />
               </div>
             </div>
@@ -200,17 +212,124 @@ function FeaturedRelease() {
   );
 }
 
+function VideoList({ videos, query }) {
+  return (
+    <section id="videos">
+      <div className="section_heading">
+        <h1><strong>{query ? `Search results for "${query}"` : "LiveLeak Videos"}</strong>&nbsp;&nbsp; RSS</h1>
+        {query && <Link href="/">clear search</Link>}
+      </div>
+
+      <ul className="item_list">
+        {videos.length === 0 && (
+          <li>
+            <div className="thumbnail_column">
+              <div className="thumb_blank" />
+              <span className="rating_icon rating_raw">RAW</span>
+            </div>
+
+            <div className="item_info_column">
+              <h2><Link href="/admin">No videos found. Add one in admin.</Link></h2>
+              <span>▶</span>&nbsp;<h3>pending</h3><br />
+              <h4>
+                By: <a href={SPOTIFY_URL} target="_blank" rel="noreferrer" className="liveleak-link">liveleak</a> |
+                Comments: <Link href="/forum">0</Link> | Views: 0 | Votes: 0 | Shared: 0<br />
+                Added: pending in <a href="#videos">Videos</a>
+              </h4>
+            </div>
+          </li>
+        )}
+
+        {videos.map((video) => (
+          <li key={video.id}>
+            <div className="thumbnail_column">
+              <Link href={`/video/${video.id}`} aria-label={`Watch ${video.title}`}>
+                <iframe
+                  src={`https://www.youtube.com/embed/${video.youtube_id}`}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  title={video.title}
+                />
+              </Link>
+
+              <span className={`rating_icon rating_${String(video.rating_tag || "ma").toLowerCase()}`}>
+                {video.rating_tag || "MA"}
+              </span>
+
+              {video.mini_tag && (
+                <span className={`mini_icon rating_${String(video.mini_tag).toLowerCase()}`}>
+                  {video.mini_tag}
+                </span>
+              )}
+            </div>
+
+            <div className="item_info_column">
+              <h2><Link href={`/video/${video.id}`}>{video.title}</Link></h2>
+              <span>▶</span>&nbsp;<h3>approved, featured</h3><br />
+
+              <h4>
+                By: <a href={SPOTIFY_URL} target="_blank" rel="noreferrer" className="liveleak-link">{video.author || "liveleak"}</a> |
+                Comments: <Link href={`/video/${video.id}`}>open</Link> |
+                Views: {video.views || 0} |
+                Votes: {video.likes || 0} |
+                Shared: {video.shares || 0}<br />
+                Added: {formatDate(video.created_at)} in <a href="#videos">Videos</a>
+              </h4>
+
+              <div className="links">
+                <Link href={`/video/${video.id}`}>Watch</Link>
+
+                <form action={likeVideo.bind(null, video.id)}>
+                  <button className="era-button" type="submit">Like</button>
+                </form>
+
+                <form action={shareVideo.bind(null, video.id)}>
+                  <button className="era-button" type="submit">Share</button>
+                </form>
+
+                <Link href="/forum">Discuss</Link>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <ul className="pagenav">
+        <li><a href="#videos">Previous</a></li>
+        <li className="current">1</li>
+        <li><a href="#featured">2</a></li>
+        <li><Link href="/forum">3</Link></li>
+        <li><a href="#shows">4</a></li>
+        <li><a href="#contact">5</a></li>
+        <li><a href="#videos">Next</a></li>
+      </ul>
+    </section>
+  );
+}
+
 function Sidebar({ videos, threads, posts }) {
   return (
     <div id="rightcol">
-      <span className="section_title">Current Events</span>
-      <div className="scroll_list">
+      <span className="section_title danger_title">Current Events</span>
+      <div className="scroll_list current_events">
         <ul>
+          <li>
+            <img className="side_thumb" src="/images/terroristsingle.jfif" alt="Fell In Love With A Terrorist" />
+            <h4>
+              <a href={FEATURED_TRACK_URL} target="_blank" rel="noreferrer">
+                Fell In Love With A Terrorist
+              </a>
+            </h4>
+            <span>LIVELEAK / single / music</span>
+          </li>
+
           {videos.slice(0, 3).map((video) => (
             <li key={video.id}>
               <iframe
                 className="side_thumb"
                 src={`https://www.youtube.com/embed/${video.youtube_id}`}
+                title={video.title}
               />
               <h4><Link href={`/video/${video.id}`}>{video.title}</Link></h4>
               <span>{video.views || 0} views</span>
@@ -222,17 +341,31 @@ function Sidebar({ videos, threads, posts }) {
       <span className="section_title">Forum Activity</span>
       <div className="scroll_list">
         <ul>
+          {threads.length === 0 && (
+            <li>
+              <h4><Link href="/forum">No threads yet</Link></h4>
+              <span>Start the first thread.</span>
+            </li>
+          )}
+
           {threads.map((thread) => (
             <li key={thread.id}>
               <h4><Link href={`/forum/${thread.id}`}>{thread.title}</Link></h4>
-              <span>By {thread.display_name}</span>
+              <span>By {thread.display_name || "anonymous"}</span>
+            </li>
+          ))}
+
+          {posts.map((post) => (
+            <li key={post.id}>
+              <h4><Link href={`/forum/${post.thread_id}`}>Recent reply</Link></h4>
+              <span>{post.display_name || "anonymous"}: {post.body}</span>
             </li>
           ))}
         </ul>
       </div>
 
-      <span className="section_title">Shows</span>
-      <div className="stats_box">
+      <span className="section_title" id="shows">Shows</span>
+      <div className="stats_box transmission_box">
         <strong>Upcoming dates:</strong> TBA<br />
         <strong>Booking:</strong> <a href="mailto:booking@example.com">booking@example.com</a><br />
         <strong>Status:</strong> active
@@ -243,9 +376,20 @@ function Sidebar({ videos, threads, posts }) {
         <form action={createForumThread}>
           <input name="title" placeholder="Thread title" required />
           <input name="display_name" placeholder="Name" required />
-          <textarea name="body" required />
-          <button className="era-button" type="submit">Post</button>
+          <textarea name="body" placeholder="Message" required />
+          <input className="hidden-field" name="website" tabIndex="-1" autoComplete="off" />
+          <button className="era-button" type="submit">Post to Forum</button>
         </form>
+      </div>
+
+      <span className="section_title" id="contact">Contact</span>
+      <div className="stats_box" id="stats">
+        <strong>Online:</strong> 46 users<br />
+        <strong>Items:</strong> {videos.length}<br />
+        <strong>Status:</strong> approved, featured<br />
+        <strong>Category:</strong> Entertainment / Music<br />
+        <strong>Artist:</strong> LIVELEAK<br />
+        <strong>Email:</strong> <a href="mailto:booking@example.com">booking@example.com</a>
       </div>
     </div>
   );
@@ -261,12 +405,15 @@ export default async function HomePage({ searchParams }) {
       <Header query={query} />
 
       <main id="content">
+        <span id="music" />
+
         <div className="container">
           <NoticeBar />
 
           <div id="content_box">
             <div id="leftcol">
               <FeaturedRelease />
+              <VideoList videos={videos} query={query} />
             </div>
 
             <Sidebar videos={videos} threads={threads} posts={posts} />
