@@ -65,6 +65,12 @@ async function getHomeData(query) {
 function Header({ query }) {
   return (
     <div id="header">
+      <div id="top-strip">
+        <div className="container">
+          WARNING: LIVELEAK ARCHIVE MIRROR // UNVERIFIED BROADCAST MATERIAL // BAND TRANSMISSION ACTIVE
+        </div>
+      </div>
+
       <div className="container">
         <Link id="logo" href="/">
           Live<span>Leak</span>
@@ -91,7 +97,7 @@ function Header({ query }) {
             <input
               type="text"
               name="q"
-              placeholder="Search videos..."
+              placeholder="Search leaked items..."
               defaultValue={query}
             />
             <input type="submit" value="Search" />
@@ -119,9 +125,18 @@ function Header({ query }) {
   );
 }
 
+function NoticeBar() {
+  return (
+    <div className="notice_bar">
+      <strong>BREAKING:</strong> LIVELEAK signal detected. Audio recovered from corrupted tape source.
+      <span> Stream links verified.</span>
+    </div>
+  );
+}
+
 function FeaturedRelease() {
   return (
-    <div className="tab_nav_large" id="featured">
+    <div className="tab_nav_large feature_panel" id="featured">
       <ul className="tabs">
         <li><a href="#featured">In the news</a></li>
         <li><Link href="/forum">Yoursay</Link></li>
@@ -132,9 +147,11 @@ function FeaturedRelease() {
       <div className="clear" />
 
       <div className="tab_nav_contents">
+        <div className="leak_stamp">EXCLUSIVE / MUSIC / LOW RESOLUTION BROADCAST</div>
+
         <ul className="item_list">
-          <li>
-            <div className="thumbnail_column">
+          <li className="featured_item">
+            <div className="thumbnail_column featured_thumb">
               <a href={FEATURED_TRACK_URL} target="_blank" rel="noreferrer">
                 <img
                   className="thumbnail_image"
@@ -153,19 +170,20 @@ function FeaturedRelease() {
                 </a>
               </h2>
 
-              <span>▶</span>&nbsp;<h3>approved, featured</h3><br />
+              <span>▶</span>&nbsp;<h3>approved, featured, staff pick</h3><br />
 
               <div className="description">
                 <strong className="band-title">FELL IN LOVE WITH A TERRORIST OUT NOW</strong>
                 <p>
-                  Official leak from LIVELEAK. Stream it, send it, argue about it in the forum.
+                  Official transmission from LIVELEAK. Stream the single, post in the forum,
+                  and treat this page like a damaged 2012 media portal that learned how to host a band.
                 </p>
               </div>
 
               <h4>
                 By: <a href={SPOTIFY_URL} target="_blank" rel="noreferrer" className="liveleak-link">LIVELEAK</a> |
                 Comments: <Link href="/forum">46</Link> | Views: 18882 | Votes: 13 | Shared: 5076<br />
-                Location: <a href="#contact">Internet</a> | Leaked: just now in <a href="#videos">Entertainment</a>, <a href="#music">Music</a>
+                Location: Internet | Leaked: just now in <a href="#videos">Entertainment</a>, <a href="#music">Music</a>
               </h4>
 
               <div className="links">
@@ -294,8 +312,8 @@ function VideoList({ videos, query }) {
 function Sidebar({ videos, threads, posts }) {
   return (
     <div id="rightcol">
-      <span className="section_title">Current Events</span>
-      <div className="scroll_list">
+      <span className="section_title danger_title">Current Events</span>
+      <div className="scroll_list current_events">
         <ul>
           <li>
             <img className="side_thumb" src="/images/terroristsingle.jfif" alt="Fell In Love With A Terrorist" />
@@ -304,7 +322,7 @@ function Sidebar({ videos, threads, posts }) {
                 Fell In Love With A Terrorist
               </a>
             </h4>
-            <span>LIVELEAK / single / music</span>
+            <span>LIVELEAK / single / music / verified stream</span>
           </li>
 
           {videos.slice(0, 3).map((video) => (
@@ -347,11 +365,12 @@ function Sidebar({ videos, threads, posts }) {
         </ul>
       </div>
 
-      <span className="section_title" id="shows">Shows</span>
-      <div className="stats_box">
+      <span className="section_title" id="shows">Transmission Log</span>
+      <div className="stats_box transmission_box">
         <strong>Upcoming dates:</strong> TBA<br />
         <strong>Booking:</strong> <a href="mailto:booking@example.com">booking@example.com</a><br />
         <strong>Location:</strong> Internet<br />
+        <strong>Signal:</strong> unstable<br />
         <strong>Status:</strong> accepting leaks
       </div>
 
@@ -392,6 +411,8 @@ export default async function HomePage({ searchParams }) {
         <span id="music" />
 
         <div className="container">
+          <NoticeBar />
+
           <div id="content_box">
             <div id="leftcol">
               <FeaturedRelease />
