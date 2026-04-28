@@ -13,11 +13,8 @@ function cleanQuery(value) {
 
 function formatDate(value) {
   if (!value) return "pending";
-  return new Date(value).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric"
-  });
+  const d = new Date(value);
+  return `${d.toLocaleString("en-US", { month: "short" })}-${d.getDate()}-${d.getFullYear()}`;
 }
 
 async function getHomeData(query) {
@@ -34,26 +31,14 @@ async function getHomeData(query) {
   }
 
   const [
-    { data: videos, error: videoError },
-    { data: threads, error: threadError },
-    { data: posts, error: postError }
+    { data: videos },
+    { data: threads },
+    { data: posts }
   ] = await Promise.all([
     videosQuery,
-    db
-      .from("forum_threads")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(5),
-    db
-      .from("forum_posts")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(5)
+    db.from("forum_threads").select("*").order("created_at", { ascending: false }).limit(5),
+    db.from("forum_posts").select("*").order("created_at", { ascending: false }).limit(5)
   ]);
-
-  if (videoError) throw new Error(videoError.message);
-  if (threadError) throw new Error(threadError.message);
-  if (postError) throw new Error(postError.message);
 
   return {
     videos: videos || [],
@@ -70,393 +55,179 @@ function Header({ query }) {
       </div>
 
       <div className="container">
-        <Link id="logo" href="/">
-          Live<span>Leak</span>
-        </Link>
+        <Link id="logo" href="/">Live<span>Leak</span></Link>
 
         <div id="header-right">
           <p>
             <Link href="/forum">Create Account</Link>&nbsp;|&nbsp;
             <Link href="/admin">Log in</Link>&nbsp;|&nbsp;
-            <a href={SPOTIFY_URL} target="_blank" rel="noreferrer">spotify</a>&nbsp;
-            <a href={APPLE_MUSIC_URL} target="_blank" rel="noreferrer">apple music</a>
+            <a href={SPOTIFY_URL} target="_blank">spotify</a>&nbsp;
+            <a href={APPLE_MUSIC_URL} target="_blank">apple music</a>
           </p>
 
           <ul id="nav">
             <li className="current"><Link href="/">Home</Link></li>
-            <li><a href="#music">Music</a></li>
-            <li><a href="#shows">Shows</a></li>
             <li><a href="#videos">Videos</a></li>
             <li><Link href="/forum">Forum</Link></li>
-            <li><a href="#contact">Contact</a></li>
           </ul>
 
           <form id="search" action="/" method="get">
-            <input
-              type="text"
-              name="q"
-              placeholder="Search videos..."
-              defaultValue={query}
-            />
+            <input name="q" placeholder="Search videos..." defaultValue={query} />
             <input type="submit" value="Search" />
           </form>
         </div>
 
         <div className="clear" />
+      </div>
+    </div>
+  );
+}
 
-        <ul id="subnav">
-          <li><a href="#music">News &amp; Politics</a>&nbsp;|</li>
-          <li><Link href="/forum">Yoursay</Link>&nbsp;|</li>
-          <li><a href="#featured">Must See</a>&nbsp;|</li>
-          <li><a href="#videos">Entertainment</a>&nbsp;|</li>
-          <li><Link href="/forum">Chat</Link>&nbsp;|</li>
-          <li><a href="#contact">Staff Blog</a>&nbsp;|</li>
-          <li><a href="#top-leakers">Top Leakers</a>&nbsp;|</li>
-          <li>
-            <a href={SPOTIFY_URL} target="_blank" rel="noreferrer">
-              <strong>PREMIUM MEMBERSHIPS</strong>
+function Featured() {
+  return (
+    <div className="feature_panel">
+      <div className="leak_stamp">EXCLUSIVE / MUSIC</div>
+
+      <div className="feature_inner">
+        <img src="/images/terroristsingle.jfif" />
+
+        <div>
+          <h2>
+            <a href={FEATURED_TRACK_URL} target="_blank">
+              FELL IN LOVE WITH A TERRORIST - LIVELEAK
             </a>
-          </li>
-        </ul>
+          </h2>
+
+          <p>New single from LIVELEAK.</p>
+
+          <div className="meta">
+            By LIVELEAK | Views: 18882 | Votes: 13<br />
+            Category: Music | Added: Apr-28-2026<br />
+            Tags: music, liveleak
+          </div>
+
+          <div className="links">
+            <a href={FEATURED_TRACK_URL} target="_blank">Listen</a>
+            <a href={SPOTIFY_URL} target="_blank">Spotify</a>
+            <a href={APPLE_MUSIC_URL} target="_blank">Apple Music</a>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-function NoticeBar() {
+function VideoList({ videos }) {
   return (
-    <div className="notice_bar">
-      <strong>Featured item:</strong> Fell In Love With A Terrorist by LIVELEAK.
-      <span> Stream links available now.</span>
-    </div>
+    <ul className="item_list">
+      {videos.map((video) => (
+        <li key={video.id}>
+          <iframe
+            src={`https://www.youtube.com/embed/${video.youtube_id}`}
+            title={video.title}
+          />
+
+          <div className="info">
+            <h3>
+              <Link href={`/video/${video.id}`}>{video.title}</Link>
+            </h3>
+
+            <div className="meta">
+              Views: {video.views || 0} | Votes: {video.likes || 0} | Comments: {video.comment_count || 0}<br />
+              Added: {formatDate(video.created_at)}<br />
+              Tags: video
+            </div>
+
+            <div className="links">
+              <form action={likeVideo.bind(null, video.id)}>
+                <button type="submit">Like</button>
+              </form>
+
+              <form action={shareVideo.bind(null, video.id)}>
+                <button type="submit">Share</button>
+              </form>
+
+              <Link href={`/video/${video.id}`}>Comments</Link>
+            </div>
+          </div>
+        </li>
+      ))}
+    </ul>
   );
 }
 
-function BandBanner() {
+function Sidebar({ videos, threads }) {
   return (
-    <div className="band_banner">
-      <a href={FEATURED_TRACK_URL} target="_blank" rel="noreferrer">
-        <span className="banner_label">LIVELEAK</span>
-        <span className="banner_title">FELL IN LOVE WITH A TERRORIST</span>
-        <span className="banner_action">LISTEN NOW</span>
-      </a>
-    </div>
-  );
-}
+    <div id="rightcol">
+      <div className="section_title">Latest Items</div>
 
-function FeaturedRelease() {
-  return (
-    <div className="tab_nav_large feature_panel" id="featured">
-      <ul className="tabs">
-        <li><a href="#featured">In the news</a></li>
-        <li><Link href="/forum">Yoursay</Link></li>
-        <li><a href="#featured" className="current">Must See</a></li>
-        <li><a href="#videos">Recent Activity</a></li>
-      </ul>
-
-      <div className="clear" />
-
-      <div className="tab_nav_contents">
-        <div className="leak_stamp">EXCLUSIVE / MUSIC</div>
-
-        <ul className="item_list">
-          <li className="featured_item">
-            <div className="thumbnail_column featured_thumb">
-              <a href={FEATURED_TRACK_URL} target="_blank" rel="noreferrer">
-                <img
-                  className="thumbnail_image"
-                  src="/images/terroristsingle.jfif"
-                  alt="Fell in Love With a Terrorist"
-                />
-              </a>
-              <span className="rating_icon rating_ga">GA</span>
-              <span className="mini_icon rating_hd">HD</span>
-            </div>
-
-            <div className="item_info_column">
-              <h2>
-                <a href={FEATURED_TRACK_URL} target="_blank" rel="noreferrer">
-                  FELL IN LOVE WITH A TERRORIST - LIVELEAK
-                </a>
-              </h2>
-
-              <span>▶</span>&nbsp;<h3>approved, featured</h3><br />
-
-              <div className="description">
-                <strong className="band-title">FELL IN LOVE WITH A TERRORIST OUT NOW</strong>
-                <p>
-                  New single from LIVELEAK. Listen now on Spotify and Apple Music.
-                </p>
-              </div>
-
-              <h4>
-                By: <a href={SPOTIFY_URL} target="_blank" rel="noreferrer" className="liveleak-link">LIVELEAK</a> |
-                Comments: <Link href="/forum">46</Link> | Views: 18882 | Votes: 13 | Shared: 5076<br />
-                Category: Music | Added: Apr 2026 in <a href="#videos">Entertainment</a>, <a href="#music">Music</a>
-              </h4>
-
-              <div className="links">
-                <a href={FEATURED_TRACK_URL} target="_blank" rel="noreferrer">Listen</a>
-                <a href={SPOTIFY_URL} target="_blank" rel="noreferrer">Spotify</a>
-                <a href={APPLE_MUSIC_URL} target="_blank" rel="noreferrer">Apple Music</a>
-                <Link href="/forum">Discuss</Link>
-              </div>
-
-              <div className="spotify-wrap">
-                <iframe
-                  data-testid="embed-iframe"
-                  src="https://open.spotify.com/embed/track/49fyD99tJX6n8Wh0UOmT07?utm_source=generator&theme=0"
-                  height="152"
-                  frameBorder="0"
-                  allowFullScreen
-                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                  loading="lazy"
-                  title="Fell in Love With a Terrorist Spotify embed"
-                />
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  );
-}
-
-function VideoList({ videos, query }) {
-  return (
-    <section id="videos">
-      <div className="section_heading">
-        <h1><strong>{query ? `Search results for "${query}"` : "LiveLeak Videos"}</strong>&nbsp;&nbsp; RSS</h1>
-        {query && <Link href="/">clear search</Link>}
-      </div>
-
-      <ul className="item_list">
-        {videos.length === 0 && (
-          <li>
-            <div className="thumbnail_column">
-              <div className="thumb_blank" />
-              <span className="rating_icon rating_raw">RAW</span>
-            </div>
-
-            <div className="item_info_column">
-              <h2><Link href="/admin">No videos found. Add one in admin.</Link></h2>
-              <span>▶</span>&nbsp;<h3>pending</h3><br />
-              <h4>
-                By: <a href={SPOTIFY_URL} target="_blank" rel="noreferrer" className="liveleak-link">liveleak</a> |
-                Comments: <Link href="/forum">0</Link> | Views: 0 | Votes: 0 | Shared: 0<br />
-                Added: pending in <a href="#videos">Videos</a>
-              </h4>
-            </div>
-          </li>
-        )}
-
-        {videos.map((video) => (
-          <li key={video.id}>
-            <div className="thumbnail_column">
-              <Link href={`/video/${video.id}`} aria-label={`Watch ${video.title}`}>
-                <iframe
-                  src={`https://www.youtube.com/embed/${video.youtube_id}`}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  title={video.title}
-                />
-              </Link>
-
-              <span className={`rating_icon rating_${String(video.rating_tag || "ma").toLowerCase()}`}>
-                {video.rating_tag || "MA"}
-              </span>
-
-              {video.mini_tag && (
-                <span className={`mini_icon rating_${String(video.mini_tag).toLowerCase()}`}>
-                  {video.mini_tag}
-                </span>
-              )}
-            </div>
-
-            <div className="item_info_column">
-              <h2><Link href={`/video/${video.id}`}>{video.title}</Link></h2>
-              <span>▶</span>&nbsp;<h3>approved, featured</h3><br />
-
-              <h4>
-                By: <a href={SPOTIFY_URL} target="_blank" rel="noreferrer" className="liveleak-link">{video.author || "liveleak"}</a> |
-                Comments: <Link href={`/video/${video.id}`}>open</Link> |
-                Views: {video.views || 0} |
-                Votes: {video.likes || 0} |
-                Shared: {video.shares || 0}<br />
-                Added: {formatDate(video.created_at)} in <a href="#videos">Videos</a>
-              </h4>
-
-              <div className="links">
-                <Link href={`/video/${video.id}`}>Watch</Link>
-
-                <form action={likeVideo.bind(null, video.id)}>
-                  <button className="era-button" type="submit">Like</button>
-                </form>
-
-                <form action={shareVideo.bind(null, video.id)}>
-                  <button className="era-button" type="submit">Share</button>
-                </form>
-
-                <Link href="/forum">Discuss</Link>
-              </div>
-            </div>
+      <ul className="scroll_list">
+        {videos.slice(0, 5).map(v => (
+          <li key={v.id}>
+            <Link href={`/video/${v.id}`}>{v.title}</Link>
           </li>
         ))}
       </ul>
 
-      <ul className="pagenav">
-        <li><a href="#videos">Previous</a></li>
-        <li className="current">1</li>
-        <li><a href="#featured">2</a></li>
-        <li><Link href="/forum">3</Link></li>
-        <li><a href="#shows">4</a></li>
-        <li><a href="#contact">5</a></li>
-        <li><a href="#videos">Next</a></li>
-      </ul>
-    </section>
-  );
-}
+      <div className="section_title">Forum Activity</div>
 
-function Sidebar({ videos, threads, posts }) {
-  return (
-    <div id="rightcol">
-      <span className="section_title danger_title">Latest Items</span>
-      <div className="scroll_list current_events">
-        <ul>
-          <li>
-            <img className="side_thumb" src="/images/terroristsingle.jfif" alt="Fell In Love With A Terrorist" />
-            <h4>
-              <a href={FEATURED_TRACK_URL} target="_blank" rel="noreferrer">
-                Fell In Love With A Terrorist
-              </a>
-            </h4>
-            <span>LIVELEAK / single / music</span>
+      <ul className="scroll_list">
+        {threads.length === 0 && (
+          <li>No threads yet.</li>
+        )}
+
+        {threads.map(t => (
+          <li key={t.id}>
+            <Link href={`/forum/${t.id}`}>{t.title}</Link>
           </li>
+        ))}
+      </ul>
 
-          {videos.slice(0, 3).map((video) => (
-            <li key={video.id}>
-              <iframe
-                className="side_thumb"
-                src={`https://www.youtube.com/embed/${video.youtube_id}`}
-                title={video.title}
-              />
-              <h4><Link href={`/video/${video.id}`}>{video.title}</Link></h4>
-              <span>{video.views || 0} views</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <div className="section_title">Band Links</div>
 
-      <span className="section_title">Band Links</span>
-      <div className="link_box">
-        <ul>
-          <li><a href={SPOTIFY_URL} target="_blank" rel="noreferrer">Official Spotify</a></li>
-          <li><a href={APPLE_MUSIC_URL} target="_blank" rel="noreferrer">Apple Music</a></li>
-          <li><a href={FEATURED_TRACK_URL} target="_blank" rel="noreferrer">Featured Single</a></li>
-          <li><Link href="/forum">Forum</Link></li>
-          <li><a href="mailto:booking@example.com">Booking Email</a></li>
-        </ul>
-      </div>
+      <ul className="scroll_list">
+        <li><a href={SPOTIFY_URL}>Spotify</a></li>
+        <li><a href={APPLE_MUSIC_URL}>Apple Music</a></li>
+      </ul>
 
-      <span className="section_title">Forum Activity</span>
-      <div className="scroll_list">
-        <ul>
-          {threads.length === 0 && (
-            <li>
-              <h4><Link href="/forum">No threads yet</Link></h4>
-              <span>Start the first thread.</span>
-            </li>
-          )}
+      <div className="section_title">Post Thread</div>
 
-          {threads.map((thread) => (
-            <li key={thread.id}>
-              <h4><Link href={`/forum/${thread.id}`}>{thread.title}</Link></h4>
-              <span>By {thread.display_name || "anonymous"}</span>
-            </li>
-          ))}
-
-          {posts.map((post) => (
-            <li key={post.id}>
-              <h4><Link href={`/forum/${post.thread_id}`}>Recent reply</Link></h4>
-              <span>{post.display_name || "anonymous"}: {post.body}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <span className="section_title" id="shows">Shows</span>
-      <div className="stats_box">
-        <strong>Upcoming dates:</strong> TBA<br />
-        <strong>Booking:</strong> <a href="mailto:booking@example.com">booking@example.com</a><br />
-        <strong>Status:</strong> active
-      </div>
-
-      <span className="section_title">Start a Thread</span>
       <div className="form_box">
         <form action={createForumThread}>
           <input name="title" placeholder="Thread title" required />
           <input name="display_name" placeholder="Name" required />
-          <textarea name="body" placeholder="Message" required />
-          <input className="hidden-field" name="website" tabIndex="-1" autoComplete="off" />
-          <button className="era-button" type="submit">Post to Forum</button>
+          <textarea name="body" placeholder="Post reply..." required />
+          <button type="submit">Post</button>
         </form>
-      </div>
-
-      <span className="section_title" id="top-leakers">Top Leakers</span>
-      <div className="top_leakers">
-        <ol>
-          <li><span>LIVELEAK</span><em>18882 pts</em></li>
-          <li><span>admin</span><em>5076 pts</em></li>
-          <li><span>anonymous</span><em>46 pts</em></li>
-          <li><span>guest</span><em>13 pts</em></li>
-          <li><span>staff</span><em>7 pts</em></li>
-        </ol>
-      </div>
-
-      <span className="section_title" id="contact">Contact</span>
-      <div className="stats_box" id="stats">
-        <strong>Online:</strong> 46 users<br />
-        <strong>Items:</strong> {videos.length}<br />
-        <strong>Status:</strong> approved, featured<br />
-        <strong>Category:</strong> Entertainment / Music<br />
-        <strong>Artist:</strong> LIVELEAK<br />
-        <strong>Email:</strong> <a href="mailto:booking@example.com">booking@example.com</a>
       </div>
     </div>
   );
 }
 
+export const metadata = {
+  icons: {
+    icon: "/favicon.ico"
+  }
+};
+
 export default async function HomePage({ searchParams }) {
-  const resolvedSearchParams = await searchParams;
-  const query = cleanQuery(resolvedSearchParams?.q);
-  const { videos, threads, posts } = await getHomeData(query);
+  const query = cleanQuery((await searchParams)?.q);
+  const { videos, threads } = await getHomeData(query);
 
   return (
     <>
       <Header query={query} />
 
-      <main id="content">
-        <span id="music" />
-
+      <div id="content">
         <div className="container">
-          <NoticeBar />
-          <BandBanner />
+          <Featured />
 
-          <div id="content_box">
-            <div id="leftcol">
-              <FeaturedRelease />
-              <VideoList videos={videos} query={query} />
-            </div>
-
-            <Sidebar videos={videos} threads={threads} posts={posts} />
-
-            <div className="clear" />
+          <div id="main">
+            <VideoList videos={videos} />
+            <Sidebar videos={videos} threads={threads} />
           </div>
         </div>
-      </main>
-
-      <div className="footer">LiveLeak.com - Redefining the Media</div>
+      </div>
     </>
   );
 }

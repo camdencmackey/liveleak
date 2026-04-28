@@ -878,4 +878,34 @@ iframe.side_thumb {
   .spotify-wrap iframe {
     max-width: 100%;
   }
+/* hover polish */
+.item_list li:hover {
+  background: rgba(120,0,0,0.05);
+}
+
+/* subtle interaction */
+.links a:hover,
+button:hover {
+  transform: translateY(1px);
+}
+
+/* compression feel */
+iframe {
+  filter: contrast(0.95) saturate(0.9);
+}
+
+/* tighter density */
+.item_list li {
+  padding: 5px 0;
+}
+
+.meta {
+  line-height: 1.2;
+}
+
+/* slight imperfection */
+.section_title {
+  margin-left: 1px;
+}
+
 }
