@@ -3,6 +3,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -23,7 +27,14 @@ a:hover {
 
 a.liveleak-link,
 a.liveleak-link:visited {
-  color: #551A8B;
+  color: #551a8b;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .clear {
@@ -48,6 +59,10 @@ a.liveleak-link:visited {
   line-height: 1;
   color: #333;
   letter-spacing: -2px;
+}
+
+#logo:hover {
+  text-decoration: none;
 }
 
 #logo span {
@@ -89,6 +104,11 @@ a.liveleak-link:visited {
   font-size: 12px;
 }
 
+#nav a:hover {
+  background: #444;
+  text-decoration: none;
+}
+
 #nav li.current a {
   background: #b10000;
 }
@@ -115,6 +135,11 @@ a.liveleak-link:visited {
   background: #ddd;
   font-size: 11px;
   cursor: pointer;
+}
+
+#search input[type="submit"]:hover {
+  background: #333;
+  color: #fff;
 }
 
 #subnav {
@@ -163,7 +188,8 @@ a.liveleak-link:visited {
   padding: 0;
   background: #ddd;
   border-bottom: 1px solid #aaa;
-  height: 27px;
+  min-height: 27px;
+  overflow: hidden;
 }
 
 .tabs li {
@@ -179,6 +205,11 @@ a.liveleak-link:visited {
   font-size: 11px;
 }
 
+.tabs a:hover {
+  background: #eee;
+  text-decoration: none;
+}
+
 .tabs a.current {
   background: #fff;
   color: #b10000;
@@ -186,6 +217,27 @@ a.liveleak-link:visited {
 
 .tab_nav_contents {
   padding: 6px;
+}
+
+.section_heading {
+  margin: 0 0 5px 0;
+  padding: 4px 7px;
+  background: #ececec;
+  border: 1px solid #ccc;
+  overflow: hidden;
+}
+
+.section_heading h1 {
+  float: left;
+  margin: 0;
+  font-size: 15px;
+  color: #333;
+}
+
+.section_heading > a {
+  float: right;
+  font-size: 11px;
+  margin-top: 2px;
 }
 
 .item_list {
@@ -205,7 +257,7 @@ a.liveleak-link:visited {
 
 .item_list li {
   overflow: hidden;
-  padding: 4px 0;
+  padding: 5px 0;
   border-bottom: 1px solid #d5d5d5;
 }
 
@@ -226,10 +278,12 @@ a.liveleak-link:visited {
 }
 
 .thumbnail_column iframe {
+  display: block;
   width: 120px;
   height: 90px;
   border: 1px solid #aaa;
   background: #eee;
+  pointer-events: none;
 }
 
 .watch_embed {
@@ -259,11 +313,25 @@ a.liveleak-link:visited {
   line-height: 14px;
 }
 
-.rating_ga { background: #3d7f2f; }
-.rating_ma { background: #9b0000; }
-.rating_hd { background: #333; }
-.rating_wtf { background: #5c326b; }
-.rating_raw { background: #5a5a5a; }
+.rating_ga {
+  background: #3d7f2f;
+}
+
+.rating_ma {
+  background: #9b0000;
+}
+
+.rating_hd {
+  background: #333;
+}
+
+.rating_wtf {
+  background: #5c326b;
+}
+
+.rating_raw {
+  background: #5a5a5a;
+}
 
 .item_info_column {
   float: left;
@@ -301,14 +369,23 @@ a.liveleak-link:visited {
   line-height: 1.25;
 }
 
+.description p {
+  margin: 4px 0 0 0;
+  color: #555;
+}
+
 .band-title {
   font-family: Arial Black, Impact, sans-serif;
   color: #111;
-  letter-spacing: .02em;
+  letter-spacing: 0.02em;
 }
 
 .links {
   margin: 7px 0;
+}
+
+.links form {
+  display: inline;
 }
 
 .links a,
@@ -322,12 +399,13 @@ button.era-button {
   font-size: 11px;
   cursor: pointer;
   font-family: Arial, Helvetica, sans-serif;
+  line-height: 15px;
 }
 
 .links a:hover,
 button.era-button:hover {
   background: #333;
-  color: white;
+  color: #fff;
   text-decoration: none;
 }
 
@@ -339,6 +417,7 @@ button.era-button:hover {
 .spotify-wrap iframe {
   width: 100%;
   max-width: 455px;
+  border-radius: 12px;
 }
 
 .section_title {
@@ -372,6 +451,10 @@ button.era-button:hover {
   overflow: hidden;
 }
 
+.scroll_list li:last-child {
+  border-bottom: none;
+}
+
 .side_thumb {
   float: left;
   width: 90px;
@@ -382,6 +465,10 @@ button.era-button:hover {
   object-fit: cover;
 }
 
+iframe.side_thumb {
+  pointer-events: none;
+}
+
 .scroll_list h4 {
   margin: 0;
   font-size: 12px;
@@ -389,9 +476,12 @@ button.era-button:hover {
 }
 
 .scroll_list span {
+  display: block;
   font-size: 11px;
   color: #666;
   line-height: 1.2;
+  max-height: 38px;
+  overflow: hidden;
 }
 
 .stats_box,
@@ -418,6 +508,7 @@ button.era-button:hover {
 
 .form_box textarea {
   min-height: 80px;
+  resize: vertical;
 }
 
 .hidden-field {
@@ -437,6 +528,10 @@ button.era-button:hover {
   padding: 3px 6px;
   background: #eee;
   margin-right: 2px;
+}
+
+.pagenav li a {
+  color: #333;
 }
 
 .pagenav .current {
@@ -473,8 +568,35 @@ button.era-button:hover {
     padding-top: 10px;
   }
 
+  #header-right p {
+    text-align: left;
+  }
+
+  #nav {
+    height: auto;
+    overflow: hidden;
+  }
+
+  #nav li {
+    width: 50%;
+    border-bottom: 1px solid #555;
+  }
+
+  #search {
+    float: none;
+    margin: 8px 0;
+  }
+
+  #search input[type="text"] {
+    width: 70%;
+  }
+
   #rightcol {
     margin-top: 12px;
+  }
+
+  .thumbnail_column {
+    margin-bottom: 6px;
   }
 
   .thumbnail_image,
@@ -486,5 +608,9 @@ button.era-button:hover {
 
   .watch_embed {
     height: 240px;
+  }
+
+  .spotify-wrap iframe {
+    max-width: 100%;
   }
 }
