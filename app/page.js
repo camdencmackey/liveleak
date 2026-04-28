@@ -66,9 +66,7 @@ function Header({ query }) {
   return (
     <div id="header">
       <div id="top-strip">
-        <div className="container">
-          LiveLeak.com - Redefining the Media
-        </div>
+        <div className="container">LiveLeak.com - Redefining the Media</div>
       </div>
 
       <div className="container">
@@ -113,7 +111,7 @@ function Header({ query }) {
           <li><a href="#videos">Entertainment</a>&nbsp;|</li>
           <li><Link href="/forum">Chat</Link>&nbsp;|</li>
           <li><a href="#contact">Staff Blog</a>&nbsp;|</li>
-          <li><a href="#stats">Top Leakers</a>&nbsp;|</li>
+          <li><a href="#top-leakers">Top Leakers</a>&nbsp;|</li>
           <li>
             <a href={SPOTIFY_URL} target="_blank" rel="noreferrer">
               <strong>PREMIUM MEMBERSHIPS</strong>
@@ -130,6 +128,18 @@ function NoticeBar() {
     <div className="notice_bar">
       <strong>Featured item:</strong> Fell In Love With A Terrorist by LIVELEAK.
       <span> Stream links available now.</span>
+    </div>
+  );
+}
+
+function BandBanner() {
+  return (
+    <div className="band_banner">
+      <a href={FEATURED_TRACK_URL} target="_blank" rel="noreferrer">
+        <span className="banner_label">LIVELEAK</span>
+        <span className="banner_title">FELL IN LOVE WITH A TERRORIST</span>
+        <span className="banner_action">LISTEN NOW</span>
+      </a>
     </div>
   );
 }
@@ -182,7 +192,7 @@ function FeaturedRelease() {
               <h4>
                 By: <a href={SPOTIFY_URL} target="_blank" rel="noreferrer" className="liveleak-link">LIVELEAK</a> |
                 Comments: <Link href="/forum">46</Link> | Views: 18882 | Votes: 13 | Shared: 5076<br />
-                Category: Music | Added: just now in <a href="#videos">Entertainment</a>, <a href="#music">Music</a>
+                Category: Music | Added: Apr 2026 in <a href="#videos">Entertainment</a>, <a href="#music">Music</a>
               </h4>
 
               <div className="links">
@@ -311,7 +321,7 @@ function VideoList({ videos, query }) {
 function Sidebar({ videos, threads, posts }) {
   return (
     <div id="rightcol">
-      <span className="section_title danger_title">Current Events</span>
+      <span className="section_title danger_title">Latest Items</span>
       <div className="scroll_list current_events">
         <ul>
           <li>
@@ -335,6 +345,17 @@ function Sidebar({ videos, threads, posts }) {
               <span>{video.views || 0} views</span>
             </li>
           ))}
+        </ul>
+      </div>
+
+      <span className="section_title">Band Links</span>
+      <div className="link_box">
+        <ul>
+          <li><a href={SPOTIFY_URL} target="_blank" rel="noreferrer">Official Spotify</a></li>
+          <li><a href={APPLE_MUSIC_URL} target="_blank" rel="noreferrer">Apple Music</a></li>
+          <li><a href={FEATURED_TRACK_URL} target="_blank" rel="noreferrer">Featured Single</a></li>
+          <li><Link href="/forum">Forum</Link></li>
+          <li><a href="mailto:booking@example.com">Booking Email</a></li>
         </ul>
       </div>
 
@@ -365,7 +386,7 @@ function Sidebar({ videos, threads, posts }) {
       </div>
 
       <span className="section_title" id="shows">Shows</span>
-      <div className="stats_box transmission_box">
+      <div className="stats_box">
         <strong>Upcoming dates:</strong> TBA<br />
         <strong>Booking:</strong> <a href="mailto:booking@example.com">booking@example.com</a><br />
         <strong>Status:</strong> active
@@ -380,6 +401,17 @@ function Sidebar({ videos, threads, posts }) {
           <input className="hidden-field" name="website" tabIndex="-1" autoComplete="off" />
           <button className="era-button" type="submit">Post to Forum</button>
         </form>
+      </div>
+
+      <span className="section_title" id="top-leakers">Top Leakers</span>
+      <div className="top_leakers">
+        <ol>
+          <li><span>LIVELEAK</span><em>18882 pts</em></li>
+          <li><span>admin</span><em>5076 pts</em></li>
+          <li><span>anonymous</span><em>46 pts</em></li>
+          <li><span>guest</span><em>13 pts</em></li>
+          <li><span>staff</span><em>7 pts</em></li>
+        </ol>
       </div>
 
       <span className="section_title" id="contact">Contact</span>
@@ -409,6 +441,7 @@ export default async function HomePage({ searchParams }) {
 
         <div className="container">
           <NoticeBar />
+          <BandBanner />
 
           <div id="content_box">
             <div id="leftcol">
