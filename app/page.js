@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { likeVideo, shareVideo, createForumThread } from "./actions";
+import { FakeAccountLinks, ReportButton } from "@/components/SiteActions";
+import { SideVideoThumb, VideoThumb } from "@/components/VideoMedia";
 
 const SPOTIFY_URL = "https://open.spotify.com/artist/46pXqeFHTjgAGPovI7u3bI";
 const APPLE_MUSIC_URL = "https://music.apple.com/us/artist/live-leak/1888285076";
@@ -79,8 +81,7 @@ function Header({ query }) {
 
         <div id="header-right">
           <p>
-            <Link href="/forum">Create Account</Link>&nbsp;|&nbsp;
-            <Link href="/admin">Log in</Link>&nbsp;|&nbsp;
+            <FakeAccountLinks />&nbsp;|&nbsp;
             <a href={SPOTIFY_URL} target="_blank" rel="noreferrer">spotify</a>&nbsp;
             <a href={APPLE_MUSIC_URL} target="_blank" rel="noreferrer">apple music</a>
           </p>
@@ -256,15 +257,7 @@ function VideoList({ videos, query }) {
         {videos.map((video) => (
           <li key={video.id}>
             <div className="thumbnail_column">
-              <Link href={`/video/${video.id}`} aria-label={`Watch ${video.title}`}>
-                <iframe
-                  src={`https://www.youtube.com/embed/${video.youtube_id}`}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  title={video.title}
-                />
-              </Link>
+              <VideoThumb video={video} />
 
               <span className={`rating_icon rating_${String(video.rating_tag || "ma").toLowerCase()}`}>
                 {video.rating_tag || "MA"}
@@ -302,6 +295,7 @@ function VideoList({ videos, query }) {
                   <button className="era-button" type="submit">Share</button>
                 </form>
 
+                <ReportButton />
                 <Link href="/forum">Discuss</Link>
               </div>
             </div>
@@ -340,11 +334,7 @@ function Sidebar({ videos, threads, posts }) {
 
           {videos.slice(0, 3).map((video) => (
             <li key={video.id}>
-              <iframe
-                className="side_thumb"
-                src={`https://www.youtube.com/embed/${video.youtube_id}`}
-                title={video.title}
-              />
+              <SideVideoThumb video={video} />
               <h4><Link href={`/video/${video.id}`}>{video.title}</Link></h4>
               <span>{video.views || 0} views</span>
             </li>
@@ -455,7 +445,7 @@ export default async function HomePage({ searchParams }) {
         </div>
       </main>
 
-      <div className="footer">LiveLeak.com - Redefining the Media</div>
+      <div className="footer">LiveLeak.com - Redefining the Media<br />band website. Not affiliated with LiveLeak.com</div>
     </>
   );
 }

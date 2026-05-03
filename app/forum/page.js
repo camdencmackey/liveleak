@@ -1,6 +1,7 @@
 // app/forum/page.js
 import Link from "next/link";
 import { createForumThread } from "@/app/actions";
+import { FakeAccountLinks } from "@/components/SiteActions";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 async function getThreads() {
@@ -29,7 +30,7 @@ export default async function ForumPage() {
           <div id="header-right">
             <p>
               <Link href="/">Home</Link>&nbsp;|&nbsp;
-              <Link href="/admin">Log in</Link>
+              <FakeAccountLinks showCreate={false} />
             </p>
 
             <ul id="nav">
@@ -126,7 +127,7 @@ export default async function ForumPage() {
         </div>
       </div>
 
-      <div className="footer">LiveLeak.com - Redefining the Media</div>
+      <div className="footer">LiveLeak.com - Redefining the Media<br />band website. Not affiliated with LiveLeak.com</div>
     </>
   );
 }

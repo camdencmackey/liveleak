@@ -12,6 +12,7 @@ import {
   deleteForumPost
 } from "@/app/actions";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { VideoThumb } from "@/components/VideoMedia";
 
 async function isAdminSessionValid() {
   const cookieStore = await cookies();
@@ -146,7 +147,7 @@ export default async function AdminPage() {
           </div>
         </div>
 
-        <div className="footer">LiveLeak.com - Redefining the Media</div>
+        <div className="footer">LiveLeak.com - Redefining the Media<br />band website. Not affiliated with LiveLeak.com</div>
       </>
     );
   }
@@ -179,8 +180,11 @@ export default async function AdminPage() {
                       <label>Title</label>
                       <input name="title" placeholder="LIVELEAK live footage" required />
 
+                      <label>Video File URL</label>
+                      <input name="video_url" placeholder="/videos/liveleak-live.mp4 or https://..." />
+
                       <label>YouTube URL</label>
-                      <input name="youtube_url" placeholder="https://youtu.be/..." required />
+                      <input name="youtube_url" placeholder="optional archive source" />
 
                       <label>Rating Tag</label>
                       <select name="rating_tag" defaultValue="MA">
@@ -224,11 +228,7 @@ export default async function AdminPage() {
                 {videos.map((video) => (
                   <li key={video.id}>
                     <div className="thumbnail_column">
-                      <iframe
-                        src={`https://www.youtube.com/embed/${video.youtube_id}`}
-                        frameBorder="0"
-                        allowFullScreen
-                      />
+                      <VideoThumb video={video} linked={false} />
                       <span className={`rating_icon rating_${String(video.rating_tag || "ma").toLowerCase()}`}>
                         {video.rating_tag || "MA"}
                       </span>
@@ -256,6 +256,9 @@ export default async function AdminPage() {
 
                           <label>Title</label>
                           <input name="title" defaultValue={video.title} required />
+
+                          <label>Video File URL</label>
+                          <input name="video_url" defaultValue={video.video_url || ""} />
 
                           <label>YouTube URL</label>
                           <input name="youtube_url" defaultValue={video.youtube_url} />
@@ -392,7 +395,7 @@ export default async function AdminPage() {
         </div>
       </div>
 
-      <div className="footer">LiveLeak.com - Redefining the Media</div>
+      <div className="footer">LiveLeak.com - Redefining the Media<br />band website. Not affiliated with LiveLeak.com</div>
     </>
   );
 }

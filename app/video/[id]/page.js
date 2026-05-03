@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { likeVideo, shareVideo, addComment } from "@/app/actions";
 import { timeAgo } from "@/lib/time";
+import { FakeAccountLinks, ReportButton } from "@/components/SiteActions";
+import { SideVideoThumb, WatchPlayer } from "@/components/VideoMedia";
 import ClientView from "./ClientView";
 
 export default async function VideoPage({ params }) {
@@ -43,7 +45,7 @@ export default async function VideoPage({ params }) {
           </Link>
 
           <div id="header-right">
-            <p><Link href="/admin">Log in</Link></p>
+            <p><FakeAccountLinks showCreate={false} /></p>
 
             <ul id="nav">
               <li><Link href="/">Home</Link></li>
@@ -67,19 +69,14 @@ export default async function VideoPage({ params }) {
                 <h1><strong>{video.title}</strong></h1>
 
                 <li>
-                  <iframe
-                    className="watch_embed"
-                    src={`https://www.youtube.com/embed/${video.youtube_id}`}
-                    frameBorder="0"
-                    allowFullScreen
-                  />
+                  <WatchPlayer video={video} />
 
                   <h4>
                     By: <a className="liveleak-link">{video.author}</a> | 
                     Views: {video.views} | 
                     Votes: {video.likes} | 
                     Shared: {video.shares}<br />
-                    Leaked: {timeAgo(video.created_at)}
+                    Leaked: {timeAgo(video.created_at)} | File: {video.video_url ? "hosted" : "not attached"}
                   </h4>
 
                   <div className="links">
@@ -91,8 +88,24 @@ export default async function VideoPage({ params }) {
                       <button className="era-button">Share</button>
                     </form>
 
+                    <ReportButton />
+                    {video.video_url && (
+                      <a href={video.video_url} download>
+                        Download
+                      </a>
+                    )}
                     <Link href="/">Back</Link>
                   </div>
+
+                  {video.video_url && (
+                    <div className="embed_box">
+                      <strong>Embed item</strong>
+                      <textarea
+                        readOnly
+                        value={`<video controls src="${video.video_url}"></video>`}
+                      />
+                    </div>
+                  )}
                 </li>
               </ul>
 
@@ -133,10 +146,7 @@ export default async function VideoPage({ params }) {
                 <ul>
                   {related.map((r) => (
                     <li key={r.id}>
-                      <iframe
-                        className="side_thumb"
-                        src={`https://www.youtube.com/embed/${r.youtube_id}`}
-                      />
+                      <SideVideoThumb video={r} />
                       <h4>
                         <Link href={`/video/${r.id}`}>{r.title}</Link>
                       </h4>
@@ -153,7 +163,7 @@ export default async function VideoPage({ params }) {
         </div>
       </div>
 
-      <div className="footer">LiveLeak.com - Redefining the Media</div>
+      <div className="footer">LiveLeak.com - Redefining the Media<br />band website. Not affiliated with LiveLeak.com</div>
     </>
   );
 }
