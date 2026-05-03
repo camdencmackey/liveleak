@@ -103,7 +103,7 @@ export default async function VideoPage({ params }) {
               </ul>
 
               {/* COMMENTS */}
-              <ul className="item_list">
+              <ul className="item_list" id="comments">
                 <h1><strong>Comments</strong> ({(comments || []).length})</h1>
 
                 {(comments || []).map((c) => (
@@ -124,6 +124,7 @@ export default async function VideoPage({ params }) {
                 <form action={addComment.bind(null, video.id)}>
                   <input name="display_name" placeholder="Name" required />
                   <textarea name="body" placeholder="Comment" required />
+                  <input className="hidden-field" name="website" tabIndex="-1" autoComplete="off" />
                   <button className="era-button">Submit</button>
                 </form>
               </div>

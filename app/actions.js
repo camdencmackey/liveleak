@@ -283,6 +283,7 @@ export async function addComment(videoId, formData) {
 
   revalidatePath("/");
   revalidatePath(`/video/${videoId}`);
+  redirect(`/video/${videoId}#comments`);
 }
 
 export async function deleteComment(formData) {

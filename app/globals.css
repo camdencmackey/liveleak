@@ -1018,3 +1018,181 @@ video.side_thumb {
     border-top: 1px solid #e2e2e2;
   }
 }
+
+@media (max-width: 560px) {
+  body {
+    font-size: 11px;
+    background:
+      repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.025),
+        rgba(0, 0, 0, 0.025) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      #d7d7d7;
+  }
+
+  .container,
+  .footer {
+    width: 100%;
+  }
+
+  #top-strip .container {
+    padding: 0 6px;
+  }
+
+  #header .container,
+  #content .container {
+    padding: 0 5px;
+  }
+
+  #logo {
+    margin: 8px 0 3px 0;
+    font-size: 29px;
+  }
+
+  #header-right {
+    padding-top: 4px;
+  }
+
+  #header-right p {
+    font-size: 10px;
+    line-height: 1.35;
+  }
+
+  #nav li {
+    width: 33.333%;
+  }
+
+  #nav a {
+    min-height: 29px;
+    padding: 7px 5px;
+    font-size: 11px;
+    text-align: center;
+  }
+
+  #subnav {
+    padding: 5px 0 7px;
+    line-height: 1.45;
+  }
+
+  #search input[type="text"] {
+    width: 72%;
+  }
+
+  #search input[type="submit"] {
+    width: 27%;
+  }
+
+  #content_box {
+    padding: 5px;
+  }
+
+  .notice_bar,
+  .band_banner,
+  .tab_nav_large,
+  .section_heading,
+  .form_box,
+  .stats_box,
+  .comment_box,
+  .scroll_list,
+  .link_box {
+    margin-bottom: 7px;
+  }
+
+  .tabs li {
+    width: 50%;
+  }
+
+  .tabs a {
+    min-height: 29px;
+    padding: 7px 5px;
+    font-size: 10px;
+    text-align: center;
+  }
+
+  .featured_item .item_info_column h2,
+  .banner_title {
+    font-size: 16px;
+    line-height: 18px;
+  }
+
+  .item_list li {
+    padding: 6px 0;
+  }
+
+  .thumbnail_column {
+    width: 124px;
+    margin-right: 7px;
+    margin-bottom: 3px;
+  }
+
+  .thumbnail_image,
+  .thumb_blank,
+  .thumbnail_column iframe,
+  .thumb_video,
+  .featured_thumb .thumbnail_image {
+    width: 120px;
+    height: 90px;
+  }
+
+  .item_info_column {
+    min-width: 0;
+  }
+
+  .watch_embed {
+    width: 100%;
+    height: auto;
+    min-height: 188px;
+    aspect-ratio: 16 / 9;
+  }
+
+  .links a,
+  button.era-button {
+    margin-right: 3px;
+    padding: 4px 6px;
+    font-size: 11px;
+  }
+
+  .side_thumb {
+    width: 78px;
+    height: 58px;
+  }
+
+  .forum_table {
+    font-size: 10px;
+  }
+
+  .forum_head span:nth-child(2),
+  .forum_row > span:nth-child(2) {
+    display: none;
+  }
+
+  .forum_row {
+    grid-template-columns: minmax(0, 1fr) 42px;
+  }
+
+  .forum_row > span {
+    padding: 5px;
+  }
+
+  .forum_row > span:nth-child(4) {
+    display: block;
+    grid-column: 1 / -1;
+    border-right: none;
+  }
+
+  .form_box input,
+  .form_box textarea,
+  .form_box select {
+    font-size: 16px;
+  }
+
+  .site-popup {
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+    max-width: none;
+  }
+}
