@@ -153,21 +153,7 @@ export default async function ForumPage() {
               </div>
             </div>
 
-            <div id="rightcol">
-              <span className="section_title">Forum Rules</span>
-              <div className="stats_box">
-                Keep it weird. Keep it readable.<br />
-                No spam. No posting private info.<br />
-                Threads are public.
-              </div>
-
-              <span className="section_title">Current Events</span>
-              <div className="stats_box">
-                Threads: {threads.length}<br />
-                Status: accepting leaks<br />
-                Category: Yoursay / Music
-              </div>
-            </div>
+            <div id="rightcol" />
 
             <div className="clear" />
           </div>

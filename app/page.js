@@ -188,7 +188,6 @@ function FeaturedRelease() {
 
               <div className="description">
                 <strong className="band-title">FELL IN LOVE WITH A TERRORIST OUT NOW</strong>
-                <p>New single from LIVELEAK. Listen now on Spotify and Apple Music.</p>
               </div>
 
               <h4>
@@ -348,7 +347,6 @@ function Sidebar({ videos, threads, posts }) {
           <li><a href={SPOTIFY_URL} target="_blank" rel="noreferrer">Official Spotify</a></li>
           <li><a href={APPLE_MUSIC_URL} target="_blank" rel="noreferrer">Apple Music</a></li>
           <li><a href={FEATURED_TRACK_URL} target="_blank" rel="noreferrer">Featured Single</a></li>
-          <li><Link href="/forum">Forum</Link></li>
           <li><a href="mailto:booking@example.com">Booking Email</a></li>
         </ul>
       </div>
@@ -381,9 +379,7 @@ function Sidebar({ videos, threads, posts }) {
 
       <span className="section_title" id="shows">Shows</span>
       <div className="stats_box">
-        <strong>Upcoming dates:</strong> TBA<br />
-        <strong>Booking:</strong> <a href="mailto:booking@example.com">booking@example.com</a><br />
-        <strong>Status:</strong> active
+        <strong>Upcoming dates:</strong> TBA
       </div>
 
       <span className="section_title">Start a Thread</span>
@@ -399,11 +395,6 @@ function Sidebar({ videos, threads, posts }) {
 
       <span className="section_title" id="contact">Contact</span>
       <div className="stats_box" id="stats">
-        <strong>Online:</strong> 46 users<br />
-        <strong>Items:</strong> {videos.length}<br />
-        <strong>Status:</strong> approved, featured<br />
-        <strong>Category:</strong> Entertainment / Music<br />
-        <strong>Artist:</strong> LIVELEAK<br />
         <strong>Email:</strong> <a href="mailto:booking@example.com">booking@example.com</a>
       </div>
     </div>
