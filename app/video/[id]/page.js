@@ -79,12 +79,12 @@ export default async function VideoPage({ params }) {
                     Views: {video.views} | 
                     Votes: {video.likes} | 
                     Shared: {video.shares}<br />
-                    Leaked: {timeAgo(video.created_at)} | File: {videoUrl ? "hosted" : "not attached"}
+                    Leaked: {timeAgo(video.created_at)}
                   </h4>
 
                   <div className="links">
                     <form action={likeVideo.bind(null, video.id)}>
-                      <button className="era-button">Like</button>
+                      <button className="era-button">Vote Good</button>
                     </form>
 
                     <form action={shareVideo.bind(null, video.id)}>
@@ -94,7 +94,7 @@ export default async function VideoPage({ params }) {
                     <ReportButton />
                     {videoUrl && (
                       <a href={`/video/${video.id}/download`}>
-                        Download
+                        Download Item
                       </a>
                     )}
                     <Link href="/">Back</Link>

@@ -561,6 +561,50 @@ select {
   padding: 2px 4px;
 }
 
+.forum_table {
+  margin-bottom: 10px;
+  border: 1px solid #aaa;
+  border-bottom: none;
+  background: #fff;
+  font-size: 11px;
+}
+
+.forum_row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 110px 55px 145px;
+  border-bottom: 1px solid #d0d0d0;
+}
+
+.forum_row > span {
+  min-width: 0;
+  padding: 6px 7px;
+  border-right: 1px solid #d8d8d8;
+  line-height: 1.25;
+}
+
+.forum_row > span:last-child {
+  border-right: none;
+}
+
+.forum_head {
+  background: linear-gradient(#eeeeee, #d5d5d5);
+  color: #333;
+  font-weight: bold;
+}
+
+.forum_row strong {
+  display: block;
+  font-size: 12px;
+}
+
+.forum_row em {
+  display: block;
+  margin-top: 2px;
+  color: #777;
+  font-size: 10px;
+  font-style: normal;
+}
+
 .item_info_column h2 {
   margin: 0 0 2px 0;
   font-size: 15px;
@@ -963,5 +1007,14 @@ video.side_thumb {
 
   .spotify-wrap iframe {
     max-width: 100%;
+  }
+
+  .forum_row {
+    grid-template-columns: minmax(0, 1fr) 70px 48px;
+  }
+
+  .forum_row > span:nth-child(4) {
+    grid-column: 1 / -1;
+    border-top: 1px solid #e2e2e2;
   }
 }

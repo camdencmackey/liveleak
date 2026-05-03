@@ -30,7 +30,12 @@ export default function BlobVideoUpload() {
       });
 
       setBlobUrl(blob.url);
-      setStatus("Upload complete. Paste this URL into Video File URL.");
+      const videoUrlInput = document.querySelector('input[name="video_url"]');
+      if (videoUrlInput) {
+        videoUrlInput.value = blob.url;
+        videoUrlInput.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      setStatus("Upload complete. Video File URL filled in below.");
     } catch (error) {
       setStatus(error.message || "Upload failed.");
     }
@@ -55,7 +60,7 @@ export default function BlobVideoUpload() {
 
       {blobUrl && (
         <>
-          <label>Blob URL</label>
+          <label>Uploaded URL</label>
           <textarea className="blob_url_output" readOnly value={blobUrl} />
         </>
       )}

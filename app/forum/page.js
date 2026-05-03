@@ -7,13 +7,91 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 async function getThreads() {
   const db = supabaseAdmin();
 
-  const { data, error } = await db
-    .from("forum_threads")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const [
+    { data: threads, error: threadError },
+    { data: posts, error: postError }
+  ] = await Promise.all([
+    db
+      .from("forum_threads")
+      .select("*")
+      .order("created_at", { ascending: false }),
+    db
+      .from("forum_posts")
+      .select("thread_id, display_name, created_at")
+      .order("created_at", { ascending: false })
+  ]);
 
-  if (error) throw new Error(error.message);
-  return data || [];
+  if (threadError) throw new Error(threadError.message);
+  if (postError) throw new Error(postError.message);
+
+  const statsByThread = {};
+
+  for (const post of posts || []) {
+    if (!statsByThread[post.thread_id]) {
+      statsByThread[post.thread_id] = {
+        replies: 0,
+        lastPostName: post.display_name,
+        lastPostAt: post.created_at
+      };
+    }
+
+    statsByThread[post.thread_id].replies += 1;
+  }
+
+  return (threads || []).map((thread) => ({
+    ...thread,
+    forumStats: statsByThread[thread.id] || {
+      replies: 0,
+      lastPostName: thread.display_name,
+      lastPostAt: thread.created_at
+    }
+  }));
+}
+
+function formatForumDate(value) {
+  if (!value) return "pending";
+
+  return new Date(value).toLocaleString();
+}
+
+function ForumTable({ threads }) {
+  return (
+    <div className="forum_table">
+      <div className="forum_row forum_head">
+        <span>Thread</span>
+        <span>Started By</span>
+        <span>Replies</span>
+        <span>Last Post</span>
+      </div>
+
+      {threads.length === 0 && (
+        <div className="forum_row">
+          <span>
+            <strong>No threads yet.</strong>
+            <em>Start the first discussion below.</em>
+          </span>
+          <span>-</span>
+          <span>0</span>
+          <span>pending</span>
+        </div>
+      )}
+
+      {threads.map((thread) => (
+        <div className="forum_row" key={thread.id}>
+          <span>
+            <strong><Link href={`/forum/${thread.id}`}>{thread.title}</Link></strong>
+            <em>{thread.locked ? "locked" : "approved"} / Yoursay</em>
+          </span>
+          <span>{thread.display_name}</span>
+          <span>{thread.forumStats.replies}</span>
+          <span>
+            {thread.forumStats.lastPostName}<br />
+            <em>{formatForumDate(thread.forumStats.lastPostAt)}</em>
+          </span>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export default async function ForumPage() {
@@ -49,32 +127,11 @@ export default async function ForumPage() {
         <div className="container">
           <div id="content_box">
             <div id="leftcol">
-              <ul className="item_list">
+              <div className="section_heading">
                 <h1><strong>LIVELEAK Forum</strong>&nbsp;&nbsp; RSS</h1>
+              </div>
 
-                {threads.length === 0 && (
-                  <li>
-                    <div className="item_info_column forum_info_column">
-                      <h2>No threads yet.</h2>
-                      <span>▶</span>&nbsp;<h3>pending</h3><br />
-                      <h4>Start the first discussion below.</h4>
-                    </div>
-                  </li>
-                )}
-
-                {threads.map((thread) => (
-                  <li key={thread.id}>
-                    <div className="item_info_column forum_info_column">
-                      <h2><Link href={`/forum/${thread.id}`}>{thread.title}</Link></h2>
-                      <span>▶</span>&nbsp;<h3>{thread.locked ? "locked" : "approved"}</h3><br />
-                      <h4>
-                        By: <a href="#" className="liveleak-link">{thread.display_name}</a> | Posted: {new Date(thread.created_at).toLocaleString()}<br />
-                        Leaked in <a href="#">Forum</a>, <a href="#">Yoursay</a>
-                      </h4>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              <ForumTable threads={threads} />
 
               <div className="form_box">
                 <strong>Start a thread</strong>
