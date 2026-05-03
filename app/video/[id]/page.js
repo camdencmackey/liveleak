@@ -6,7 +6,7 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { likeVideo, shareVideo, addComment } from "@/app/actions";
 import { timeAgo } from "@/lib/time";
 import { FakeAccountLinks, ReportButton } from "@/components/SiteActions";
-import { SideVideoThumb, WatchPlayer } from "@/components/VideoMedia";
+import { getVideoUrl, SideVideoThumb, WatchPlayer } from "@/components/VideoMedia";
 import ClientView from "./ClientView";
 
 export default async function VideoPage({ params }) {
@@ -20,6 +20,7 @@ export default async function VideoPage({ params }) {
     .single();
 
   if (!video) return notFound();
+  const videoUrl = getVideoUrl(video);
 
   const { data: comments } = await db
     .from("comments")
@@ -77,7 +78,7 @@ export default async function VideoPage({ params }) {
                     Views: {video.views} | 
                     Votes: {video.likes} | 
                     Shared: {video.shares}<br />
-                    Leaked: {timeAgo(video.created_at)} | File: {video.video_url ? "hosted" : "not attached"}
+                    Leaked: {timeAgo(video.created_at)} | File: {videoUrl ? "hosted" : "not attached"}
                   </h4>
 
                   <div className="links">
@@ -90,20 +91,20 @@ export default async function VideoPage({ params }) {
                     </form>
 
                     <ReportButton />
-                    {video.video_url && (
-                      <a href={video.video_url} download>
+                    {videoUrl && (
+                      <a href={videoUrl} download>
                         Download
                       </a>
                     )}
                     <Link href="/">Back</Link>
                   </div>
 
-                  {video.video_url && (
+                  {videoUrl && (
                     <div className="embed_box">
                       <strong>Embed item</strong>
                       <textarea
                         readOnly
-                        value={`<video controls src="${video.video_url}"></video>`}
+                        value={`<video controls src="${videoUrl}"></video>`}
                       />
                     </div>
                   )}

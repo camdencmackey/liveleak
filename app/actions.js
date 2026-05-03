@@ -128,8 +128,7 @@ export async function createVideo(formData) {
 
   const { error } = await db.from("videos").insert({
     title,
-    video_url: videoUrl || null,
-    youtube_url: youtubeUrl,
+    youtube_url: videoUrl || youtubeUrl,
     youtube_id: youtubeId || "",
     rating_tag: ratingTag,
     mini_tag: miniTag || null,
@@ -173,8 +172,7 @@ export async function updateVideo(formData) {
     .from("videos")
     .update({
       title,
-      video_url: videoUrl || null,
-      youtube_url: youtubeUrl,
+      youtube_url: videoUrl || youtubeUrl,
       youtube_id: youtubeId || "",
       rating_tag: ratingTag,
       mini_tag: miniTag || null,

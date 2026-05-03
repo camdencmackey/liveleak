@@ -13,7 +13,7 @@ import {
 } from "@/app/actions";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import BlobVideoUpload from "@/components/BlobVideoUpload";
-import { VideoThumb } from "@/components/VideoMedia";
+import { getVideoUrl, VideoThumb } from "@/components/VideoMedia";
 
 async function isAdminSessionValid() {
   const cookieStore = await cookies();
@@ -261,10 +261,10 @@ export default async function AdminPage() {
                           <input name="title" defaultValue={video.title} required />
 
                           <label>Video File URL</label>
-                          <input name="video_url" defaultValue={video.video_url || ""} />
+                          <input name="video_url" defaultValue={getVideoUrl(video)} />
 
                           <label>YouTube URL</label>
-                          <input name="youtube_url" defaultValue={video.youtube_url} />
+                          <input name="youtube_url" defaultValue={video.youtube_id ? video.youtube_url : ""} />
 
                           <label>Rating Tag</label>
                           <select name="rating_tag" defaultValue={video.rating_tag || "MA"}>
