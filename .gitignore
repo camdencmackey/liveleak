@@ -26,6 +26,7 @@
 public/videos/*.mp4
 public/videos/*.webm
 public/videos/*.mov
+public/images/poster-candidates/
 
 # debug
 npm-debug.log*

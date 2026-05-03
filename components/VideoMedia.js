@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { getVideoUrl, hasFirstPartyVideo } from "@/lib/videoSource";
+import { getVideoPoster, getVideoUrl, hasFirstPartyVideo } from "@/lib/videoSource";
 
 export function VideoThumb({ video, linked = true }) {
   const media = hasFirstPartyVideo(video) ? (
     <video
       className="thumb_video"
       src={getVideoUrl(video)}
+      poster={getVideoPoster(video)}
       preload="metadata"
       muted
       playsInline
@@ -31,6 +32,7 @@ export function SideVideoThumb({ video }) {
     <video
       className="side_thumb"
       src={getVideoUrl(video)}
+      poster={getVideoPoster(video)}
       preload="metadata"
       muted
       playsInline
@@ -49,6 +51,7 @@ export function WatchPlayer({ video }) {
       <video
         className="watch_embed watch_player"
         src={videoUrl}
+        poster={getVideoPoster(video)}
         controls
         preload="metadata"
         playsInline
