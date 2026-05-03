@@ -10,12 +10,13 @@ import { SideVideoThumb, WatchPlayer } from "@/components/VideoMedia";
 import ClientView from "./ClientView";
 
 export default async function VideoPage({ params }) {
+  const { id } = await params;
   const db = supabaseAdmin();
 
   const { data: video } = await db
     .from("videos")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (!video) return notFound();
@@ -111,9 +112,9 @@ export default async function VideoPage({ params }) {
 
               {/* COMMENTS */}
               <ul className="item_list">
-                <h1><strong>Comments</strong> ({comments.length})</h1>
+                <h1><strong>Comments</strong> ({(comments || []).length})</h1>
 
-                {comments.map((c) => (
+                {(comments || []).map((c) => (
                   <li key={c.id}>
                     <div className="comment_box">
                       <strong>{c.display_name}</strong><br />
@@ -144,7 +145,7 @@ export default async function VideoPage({ params }) {
 
               <div className="scroll_list">
                 <ul>
-                  {related.map((r) => (
+                  {(related || []).map((r) => (
                     <li key={r.id}>
                       <SideVideoThumb video={r} />
                       <h4>
