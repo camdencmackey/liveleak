@@ -12,6 +12,7 @@ import {
   deleteForumPost
 } from "@/app/actions";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import BlobVideoUpload from "@/components/BlobVideoUpload";
 import { VideoThumb } from "@/components/VideoMedia";
 
 async function isAdminSessionValid() {
@@ -147,7 +148,7 @@ export default async function AdminPage() {
           </div>
         </div>
 
-        <div className="footer">LiveLeak.com - Redefining the Media<br />band website. Not affiliated with LiveLeak.com</div>
+        <div className="footer">band website. Not affiliated with LiveLeak.com</div>
       </>
     );
   }
@@ -204,6 +205,8 @@ export default async function AdminPage() {
                       <button className="era-button" type="submit">Add Video</button>
                     </form>
                   </div>
+
+                  <BlobVideoUpload />
                 </div>
               </div>
 
@@ -395,7 +398,7 @@ export default async function AdminPage() {
         </div>
       </div>
 
-      <div className="footer">LiveLeak.com - Redefining the Media<br />band website. Not affiliated with LiveLeak.com</div>
+      <div className="footer">band website. Not affiliated with LiveLeak.com</div>
     </>
   );
 }

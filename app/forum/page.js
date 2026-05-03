@@ -54,12 +54,7 @@ export default async function ForumPage() {
 
                 {threads.length === 0 && (
                   <li>
-                    <div className="thumbnail_column">
-                      <div className="thumb_blank" />
-                      <span className="rating_icon rating_raw">RAW</span>
-                    </div>
-
-                    <div className="item_info_column">
+                    <div className="item_info_column forum_info_column">
                       <h2>No threads yet.</h2>
                       <span>▶</span>&nbsp;<h3>pending</h3><br />
                       <h4>Start the first discussion below.</h4>
@@ -69,12 +64,7 @@ export default async function ForumPage() {
 
                 {threads.map((thread) => (
                   <li key={thread.id}>
-                    <div className="thumbnail_column">
-                      <div className="thumb_blank" />
-                      <span className="rating_icon rating_raw">RAW</span>
-                    </div>
-
-                    <div className="item_info_column">
+                    <div className="item_info_column forum_info_column">
                       <h2><Link href={`/forum/${thread.id}`}>{thread.title}</Link></h2>
                       <span>▶</span>&nbsp;<h3>{thread.locked ? "locked" : "approved"}</h3><br />
                       <h4>
@@ -127,7 +117,7 @@ export default async function ForumPage() {
         </div>
       </div>
 
-      <div className="footer">LiveLeak.com - Redefining the Media<br />band website. Not affiliated with LiveLeak.com</div>
+      <div className="footer">band website. Not affiliated with LiveLeak.com</div>
     </>
   );
 }

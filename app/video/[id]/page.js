@@ -163,7 +163,7 @@ export default async function VideoPage({ params }) {
         </div>
       </div>
 
-      <div className="footer">LiveLeak.com - Redefining the Media<br />band website. Not affiliated with LiveLeak.com</div>
+      <div className="footer">band website. Not affiliated with LiveLeak.com</div>
     </>
   );
 }
