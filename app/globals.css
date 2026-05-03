@@ -683,25 +683,6 @@ button.era-button:hover {
   border-radius: 4px;
 }
 
-.embed_box {
-  margin-top: 8px;
-  padding: 7px;
-  border: 1px solid #aaa;
-  background: #ececec;
-  font-size: 11px;
-}
-
-.embed_box textarea {
-  width: 100%;
-  min-height: 44px;
-  margin-top: 5px;
-  border: 1px solid #888;
-  background: #fff;
-  color: #333;
-  font-size: 11px;
-  resize: vertical;
-}
-
 .upload_status {
   margin-top: 6px;
   padding: 5px;

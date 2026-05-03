@@ -6,7 +6,8 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { likeVideo, shareVideo, addComment } from "@/app/actions";
 import { timeAgo } from "@/lib/time";
 import { FakeAccountLinks, ReportButton } from "@/components/SiteActions";
-import { getVideoUrl, SideVideoThumb, WatchPlayer } from "@/components/VideoMedia";
+import { SideVideoThumb, WatchPlayer } from "@/components/VideoMedia";
+import { getVideoUrl } from "@/lib/videoSource";
 import ClientView from "./ClientView";
 
 export default async function VideoPage({ params }) {
@@ -92,22 +93,12 @@ export default async function VideoPage({ params }) {
 
                     <ReportButton />
                     {videoUrl && (
-                      <a href={videoUrl} download>
+                      <a href={`/video/${video.id}/download`}>
                         Download
                       </a>
                     )}
                     <Link href="/">Back</Link>
                   </div>
-
-                  {videoUrl && (
-                    <div className="embed_box">
-                      <strong>Embed item</strong>
-                      <textarea
-                        readOnly
-                        value={`<video controls src="${videoUrl}"></video>`}
-                      />
-                    </div>
-                  )}
                 </li>
               </ul>
 

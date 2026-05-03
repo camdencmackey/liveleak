@@ -5,7 +5,6 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
-import { extractYouTubeId } from "@/lib/youtube";
 
 /* ---------- helpers ---------- */
 
@@ -115,21 +114,19 @@ export async function createVideo(formData) {
 
   const title = clean(formData.get("title"), 120);
   const videoUrl = optionalUrl(formData.get("video_url"));
-  const youtubeUrl = clean(formData.get("youtube_url"), 500);
-  const youtubeId = extractYouTubeId(youtubeUrl);
   const ratingTag = normalizeTag(formData.get("rating_tag"), "MA");
   const miniTag = normalizeTag(formData.get("mini_tag"), "HD");
 
-  if (!title || (!videoUrl && !youtubeId)) {
-    throw new Error("Title plus a video file URL or valid YouTube URL are required.");
+  if (!title || !videoUrl) {
+    throw new Error("Title and video file URL are required.");
   }
 
   const db = supabaseAdmin();
 
   const { error } = await db.from("videos").insert({
     title,
-    youtube_url: videoUrl || youtubeUrl,
-    youtube_id: youtubeId || "",
+    youtube_url: videoUrl,
+    youtube_id: "",
     rating_tag: ratingTag,
     mini_tag: miniTag || null,
     category: "Videos",
@@ -152,8 +149,6 @@ export async function updateVideo(formData) {
   const id = clean(formData.get("id"), 80);
   const title = clean(formData.get("title"), 120);
   const videoUrl = optionalUrl(formData.get("video_url"));
-  const youtubeUrl = clean(formData.get("youtube_url"), 500);
-  const youtubeId = extractYouTubeId(youtubeUrl);
   const ratingTag = normalizeTag(formData.get("rating_tag"), "MA");
   const miniTag = normalizeTag(formData.get("mini_tag"), "HD");
   const published = formData.get("published") === "on";
@@ -162,8 +157,8 @@ export async function updateVideo(formData) {
     throw new Error("Video ID and title are required.");
   }
 
-  if (!videoUrl && !youtubeId) {
-    throw new Error("Video file URL or valid YouTube URL is required.");
+  if (!videoUrl) {
+    throw new Error("Video file URL is required.");
   }
 
   const db = supabaseAdmin();
@@ -172,8 +167,8 @@ export async function updateVideo(formData) {
     .from("videos")
     .update({
       title,
-      youtube_url: videoUrl || youtubeUrl,
-      youtube_id: youtubeId || "",
+      youtube_url: videoUrl,
+      youtube_id: "",
       rating_tag: ratingTag,
       mini_tag: miniTag || null,
       published

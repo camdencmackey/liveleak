@@ -1,15 +1,5 @@
 import Link from "next/link";
-import { extractYouTubeId } from "@/lib/youtube";
-
-export function getVideoUrl(video) {
-  if (video?.video_url) return video.video_url;
-  if (video?.youtube_url && !extractYouTubeId(video.youtube_url)) return video.youtube_url;
-  return "";
-}
-
-export function hasFirstPartyVideo(video) {
-  return Boolean(getVideoUrl(video));
-}
+import { getVideoUrl, hasFirstPartyVideo } from "@/lib/videoSource";
 
 export function VideoThumb({ video, linked = true }) {
   const media = hasFirstPartyVideo(video) ? (
