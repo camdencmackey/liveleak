@@ -99,7 +99,7 @@ export default async function ForumThreadPage({ params }) {
 
                 <form action={addForumReply.bind(null, thread.id)}>
                   <label>Name</label>
-                  <input name="display_name" maxLength="40" required />
+                  <input name="display_name" maxLength="40" autoComplete="off" data-1p-ignore required />
 
                   <label>Reply</label>
                   <textarea name="body" maxLength="1200" required />

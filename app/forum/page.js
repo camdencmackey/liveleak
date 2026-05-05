@@ -140,7 +140,7 @@ export default async function ForumPage() {
 
                 <form action={createForumThread}>
                   <label>Name</label>
-                  <input name="display_name" maxLength="40" required />
+                  <input name="display_name" maxLength="40" autoComplete="off" data-1p-ignore required />
 
                   <label>Title</label>
                   <input name="title" maxLength="120" required />

@@ -386,7 +386,7 @@ function Sidebar({ videos, threads, posts }) {
       <div className="form_box">
         <form action={createForumThread}>
           <input name="title" placeholder="Thread title" required />
-          <input name="display_name" placeholder="Name" required />
+          <input name="display_name" placeholder="Name" autoComplete="off" data-1p-ignore required />
           <textarea name="body" placeholder="Post reply..." required />
           <input className="hidden-field" name="website" tabIndex="-1" autoComplete="off" />
           <button className="era-button" type="submit">Post to Forum</button>

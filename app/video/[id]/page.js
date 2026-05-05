@@ -122,7 +122,7 @@ export default async function VideoPage({ params }) {
                 <strong>Post comment</strong>
 
                 <form action={addComment.bind(null, video.id)}>
-                  <input name="display_name" placeholder="Name" required />
+                  <input name="display_name" placeholder="Name" autoComplete="off" data-1p-ignore required />
                   <textarea name="body" placeholder="Comment" required />
                   <input className="hidden-field" name="website" tabIndex="-1" autoComplete="off" />
                   <button className="era-button">Submit</button>
