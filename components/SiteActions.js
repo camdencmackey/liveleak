@@ -29,7 +29,7 @@ export function FakeAccountLinks({ showCreate = true }) {
     setMessage(
       type === "create"
         ? "ERROR: new registrations are currently disabled by admin."
-        : "ERROR: login server timed out. Try again in 2007."
+        : "ERROR: login server timed out."
     );
   }
 
