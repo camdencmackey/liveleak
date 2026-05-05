@@ -8,6 +8,7 @@ import { SideVideoThumb, VideoThumb } from "@/components/VideoMedia";
 const SPOTIFY_URL = "https://open.spotify.com/artist/46pXqeFHTjgAGPovI7u3bI";
 const APPLE_MUSIC_URL = "https://music.apple.com/us/artist/live-leak/1888285076";
 const FEATURED_TRACK_URL = "https://open.spotify.com/track/49fyD99tJX6n8Wh0UOmT07";
+const BANDCAMP_URL = "https://liveleak.bandcamp.com/track/fell-in-love-with-a-terrorist";
 
 function cleanQuery(value) {
   return String(value || "").trim().slice(0, 80);
@@ -344,10 +345,9 @@ function Sidebar({ videos, threads, posts }) {
       <span className="section_title" id="band-links">Band Links</span>
       <div className="link_box">
         <ul>
-          <li><a href={SPOTIFY_URL} target="_blank" rel="noreferrer">Official Spotify</a></li>
+          <li><a href={SPOTIFY_URL} target="_blank" rel="noreferrer">Spotify</a></li>
+          <li><a href={BANDCAMP_URL} target="_blank" rel="noreferrer">Bandcamp</a></li>
           <li><a href={APPLE_MUSIC_URL} target="_blank" rel="noreferrer">Apple Music</a></li>
-          <li><a href={FEATURED_TRACK_URL} target="_blank" rel="noreferrer">Featured Single</a></li>
-          <li><a href="mailto:booking@example.com">Booking Email</a></li>
         </ul>
       </div>
 
