@@ -4,6 +4,8 @@ import { createForumThread } from "@/app/actions";
 import { FakeAccountLinks } from "@/components/SiteActions";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
+export const dynamic = "force-dynamic";
+
 async function getThreads() {
   const db = supabaseAdmin();
 
