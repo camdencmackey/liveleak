@@ -118,7 +118,7 @@ export async function createVideo(formData) {
   const miniTag = normalizeTag(formData.get("mini_tag"), "HD");
 
   if (!title || !videoUrl) {
-    throw new Error("Title and video file URL are required.");
+    throw new Error("Title and YouTube URL are required.");
   }
 
   const db = supabaseAdmin();
@@ -158,7 +158,7 @@ export async function updateVideo(formData) {
   }
 
   if (!videoUrl) {
-    throw new Error("Video file URL is required.");
+    throw new Error("YouTube URL is required.");
   }
 
   const db = supabaseAdmin();

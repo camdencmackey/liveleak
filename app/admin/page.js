@@ -12,9 +12,7 @@ import {
   deleteForumPost
 } from "@/app/actions";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
-import BlobVideoUpload from "@/components/BlobVideoUpload";
 import { VideoThumb } from "@/components/VideoMedia";
-import { getVideoUrl } from "@/lib/videoSource";
 
 async function isAdminSessionValid() {
   const cookieStore = await cookies();
@@ -182,8 +180,8 @@ export default async function AdminPage() {
                       <label>Title</label>
                       <input name="title" placeholder="LIVELEAK live footage" required />
 
-                      <label>Video File URL</label>
-                      <input name="video_url" placeholder="Paste Vercel Blob URL here" required />
+                      <label>YouTube URL</label>
+                      <input name="video_url" placeholder="https://www.youtube.com/watch?v=..." required />
 
                       <label>Rating Tag</label>
                       <select name="rating_tag" defaultValue="MA">
@@ -204,7 +202,6 @@ export default async function AdminPage() {
                     </form>
                   </div>
 
-                  <BlobVideoUpload />
                 </div>
               </div>
 
@@ -258,8 +255,8 @@ export default async function AdminPage() {
                           <label>Title</label>
                           <input name="title" defaultValue={video.title} required />
 
-                          <label>Video File URL</label>
-                          <input name="video_url" defaultValue={getVideoUrl(video)} />
+                          <label>YouTube URL</label>
+                          <input name="video_url" defaultValue={video.youtube_url || ""} />
 
                           <label>Rating Tag</label>
                           <select name="rating_tag" defaultValue={video.rating_tag || "MA"}>

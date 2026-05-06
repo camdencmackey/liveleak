@@ -7,7 +7,7 @@ import { likeVideo, shareVideo, addComment } from "@/app/actions";
 import { timeAgo } from "@/lib/time";
 import { FakeAccountLinks, ReportButton } from "@/components/SiteActions";
 import { SideVideoThumb, WatchPlayer } from "@/components/VideoMedia";
-import { getVideoUrl } from "@/lib/videoSource";
+import { getVideoUrl, getYouTubeEmbedUrl } from "@/lib/videoSource";
 import ClientView from "./ClientView";
 
 export default async function VideoPage({ params }) {
@@ -21,7 +21,8 @@ export default async function VideoPage({ params }) {
     .single();
 
   if (!video) return notFound();
-  const videoUrl = getVideoUrl(video);
+  const youtubeEmbedUrl = getYouTubeEmbedUrl(video);
+  const videoUrl = youtubeEmbedUrl ? "" : getVideoUrl(video);
 
   const { data: comments } = await db
     .from("comments")
