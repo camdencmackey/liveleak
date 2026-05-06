@@ -46,8 +46,7 @@ export function WatchPlayer({ video }) {
         className="watch_embed"
         src={youtubeEmbedUrl}
         title={video.title}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowFullScreen
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share"
       />
     );
   }

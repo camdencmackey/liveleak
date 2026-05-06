@@ -211,7 +211,6 @@ function FeaturedRelease() {
                   src="https://open.spotify.com/embed/track/49fyD99tJX6n8Wh0UOmT07?utm_source=generator&theme=0"
                   height="152"
                   frameBorder="0"
-                  allowFullScreen
                   allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                   loading="lazy"
                   title="Fell in Love With a Terrorist Spotify embed"
