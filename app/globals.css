@@ -893,6 +893,12 @@ video.side_thumb {
   resize: vertical;
 }
 
+.form_error {
+  margin: 7px 0;
+  color: #b00000;
+  font-weight: bold;
+}
+
 .hidden-field {
   display: none;
 }

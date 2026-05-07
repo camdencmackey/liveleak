@@ -40,7 +40,7 @@ async function requireAdmin() {
   const expected = getAdminSessionSecret();
 
   if (!expected || cookieStore.get(ADMIN_COOKIE)?.value !== expected) {
-    throw new Error("Not authorized");
+    redirect("/admin?error=session");
   }
 }
 

@@ -101,8 +101,10 @@ function AdminHeader() {
   );
 }
 
-export default async function AdminPage() {
+export default async function AdminPage({ searchParams }) {
   const authed = await isAdminSessionValid();
+  const params = await searchParams;
+  const error = params?.error;
 
   if (!authed) {
     return (
@@ -125,6 +127,12 @@ export default async function AdminPage() {
                   <div className="tab_nav_contents">
                     <div className="form_box">
                       <strong>Log in</strong>
+                      {error === "session" && (
+                        <p className="form_error">Admin session expired. Log in again.</p>
+                      )}
+                      {error === "invalid" && (
+                        <p className="form_error">Wrong password.</p>
+                      )}
                       <form action={loginAdmin}>
                         <label>Admin Password</label>
                         <input name="password" type="password" required />
